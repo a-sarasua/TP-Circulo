@@ -1,0 +1,188 @@
+Trabajo Práctico: Mover Círculo
+Alumno: Sarasúa, Agustín
+
+Consigna
+
+Crear una aplicación que tenga un circulo rojo, un tablero de control con 4 flechas (arriba, abajo, izquierda y derecha) y una configuración de colores. Mediante el tablero de control el círculo debe poder moverse hacia el lado que fue indicado. Lo mismo debe suceder con las teclas: Si aprieto la tecla derecha, el círculo debe moverse hacia la derecha. Si aprieto la izquierda, hacia la izquierda. El color del círculo debe poder elegirse entre rojo, azul y verde.
+
+Consignas Bonus:
+
+-¿Qué pasa si el círculo llega al extremo de la pantalla? Pensar cómo solucionar el problema y programar la solución.
+-Agregar una opción para que el círculo se mueva solo aleatoriamente.
+-Agregar otra opción para que el círculo se mueva diagonalmente y cambiar su rumbo al chocarse con una pared.
+
+En el body HTML tendremos:
+	contenido (div)
+		botones (div): todos tendrán como texto un '<'
+			botones arriba (div) //esto es para que la distribución sea como el teclado 
+				botón arriba
+			botones abajo (div)
+				botón abajo
+				botón izquierda
+				botón derecha
+		colores (div)
+			botón azul
+			botón verde
+			botón rojo
+		random (div)
+			botón random
+		div clase círculo
+
+Objetivos para con el círculo (que serán 4 funciones):
+	-Al apretarse flecha/tecla arriba, el elemento de clase círculo se moverá hacia arriba
+	-Al apretarse flecha/tecla abajo, el círculo se moverá hacia abajo
+	-Al apretarse flecha/tecla izquierda, el círculo se moverá hacia la izquierda
+	-Al apretarse flecha/tecla derecha, el círculo se moverá hacia la derecha
+
+En CSS tendremos que darle estilo a:
+	-contenido: será el elemento padre (position relative) para poder mover el círculo
+		ocupará toda la pantalla
+			altura minima: 100vh
+			ancho mínimo: 100vh
+		usará display flex alineando y justificando elementos al medio (con ello el círculo irá al medio)
+	-control: será ubicado a la derecha de la pantalla. Tendrá position absolute
+		-botonesMovimiento: es la clase que tendrá cada uno de estos botones. Está para:
+			hacer que todos tengan forma de círculo
+			darle un color de fondo a cada botón
+		-botonArriba:
+			rotación 90°
+		-botonAbajo:
+			rotación 270°
+	-colores: estarán más abajo que los botones. Están para elegir el color del círculo.
+		-botonColor: clase común para todos, para darle forma y tamaño
+		-botonAzul: background-color: #0000FF
+		-botonVerde: background-color: #00FF00
+		-botonRojo: background-color: #FF0000
+	-random: estará ubicado a la izquierda de la pantalla
+		-botonRandom: su forma será redondeada y tendrá de fondo su propia imagen
+	-círculo:
+		tendrá position absolute
+		además de tener su forma circular (con border radious), su color de fondo predeterminado será rojo
+		tendrá una transición de 0.2 segundos
+			esto hará que tanto el movimiento como el cambio de color sea más agradable a la vista
+
+eventListener que usaremos:
+
+	-para cambiar color (todos tendrán su función de una sola línea ahi mismo):
+		-botonAzul: 
+			circulo.style.backgroundColor = '#0000FF'
+				le cambia el estilo al circulo solamente en su color de fondo. Si no pongo 'backgroundColor', sobreescribe a la nueva posición que le damos con las flechas. Es decir. volvería al centro cuando cambio de color
+		-botonVerde: circulo.style.backgroundColor = '#00FF00'
+		-botonRojo: circulo.style.backgroundColor = '#FF0000'
+	-para el movimiento:
+		-botonArriba: 
+			irá a la función botonMouseAbajo dando como parámetro 38 (el código de flecha arriba)
+		-botonAbajo: irá a botonMouseAbajo dando como parámetro 40
+		-botonIzquierda: irá a botonMouseAbajo dando como parámetro 37
+		-botonDerecha: irá a botonMouseAbajo dando como parámetro 39
+		-tecla apretada ('keydown'): irá a la función elegirMovimiento dando como parámetro el número de tecla.
+
+Funciones:
+	-Variables globales: antes que nada, se crearan 3 variables globales:
+		posición arriba inicial: circulo.offsetTop (const int)
+		posición izquierda inicial: circulo.offsetLeft (const int)
+		clickAbajoID = -1 (let int)
+
+	-esperar: 
+		está para determinar tiempos de espera porque, de no estar, las transisiones se buguean con más de un pedido de movimiento en un mismo segundo. Como se consiguió en internet, voy directo al paso 2:
+			Recibe el tiempo a esperar en ms
+				crea variable (const int) comienzo
+					será 'newDate' (nueva fecha) '.getTime' (obtener actual)
+				crea variable (let int) final
+					será el valor obtenido en comienzo
+				mientras el final sea menor al comienzo + ms (tiempo recibido)
+					final será igual a la fecha actual (idem como fue obtenida comienzo más arriba)
+
+	-elegir movimiento
+		-paso2:
+			Recibe un número (más bien key)
+			espera 20ms llamando a la función 'esperar' para que no se buguee la transición 
+			hace un switch según el número recibido:
+				flecha izquierda (case keyCode 37):
+					irá a la función moverIzquierda
+				flecha arriba (case keyCode 38): 
+					irá a la función moverArriba
+				flecha derecha (case keyCode 39):
+					irá a la función moverDerecha
+				flecha abajo (case keyCode 40): 
+					irá a la función moverAbajo
+				default: termina función (return)	
+
+	-moverArriba
+		-paso 1
+			cuando el usuario indique al circulo que suba:
+				ver si el circulo se va a salir de la pantalla. De ser así:
+					no permitir que el circulo siga subiendo
+				en caso de que no
+					el círculo tendrá una nueva posición, un pequeño espacio más arriba
+		-paso 2
+			llegaremos a esta función con el case 38 de elegirMovimiento:
+				el usuario aprieta botonArriba
+				el usuaria toca la flecha arriba (keyCode 38)
+			crearemos una variable (const int) nuevaPosicion
+				será el margen de arriba - 10 (la cantidad de px que quiero que se mueva)
+			si nuevaPosicion es menor a 0 (if):
+				return vacio, fin de la función
+			en caso de que no (else)
+				al margen de arriba del circulo le asignaremos (como estilo) nuevaPosicion (en px)
+					será: circulo.style.top = nuevaPosicion + 'px'
+
+	-moverAbajo
+		-paso 1
+			cuando el usuario indique al circulo que baje:
+				ver si el circulo se va a salir de la pantalla. De ser así:
+					no permitir que el circulo siga bajando
+				en caso de que no
+					el círculo tendrá una nueva posición, un pequeño espacio más arriba
+		-paso 2
+			llegaremos a esta función con el case 40 de elegirMovimiento:
+				el usuario aprieta botonAbajo
+				el usuaria toca la flecha abajo (keyCode 40)
+			crearemos una variable (const int) nuevaPosicion
+				será el margen de arriba + 10 (mientras mayor margen arriba, más abajo estará)
+			si el doble de posicionArribaInicial es menor a nuevaPosición (if):
+				return vacio, fin de la función porque el doble de la mitad es la página completa
+			en caso de que no (else)
+				al margen de arriba del circulo le asignaremos (como estilo) nuevaPosicion
+					será: circulo.style.top = nuevaPosicion + 'px'
+
+	-moverIzquierda
+		-paso 1
+			cuando el usuario indique al circulo que se mueva a la izquierda:
+				ver si el circulo se va a salir de la pantalla. De ser así:
+					no permitir que el circulo siga moviéndose
+				en caso de que no
+					el círculo tendrá una nueva posición, un pequeño espacio más a la izquierda
+		-paso 2
+			llegaremos a esta función con el case 37 de elegirMovimiento:
+				el usuario aprieta botonIzquierda
+				el usuaria toca la flecha izquierda (keyCode 37)
+			crearemos una variable (const int) nuevaPosicion
+				será el margen izquierdo - 10 
+			si nuevaPosicion es menor a 0 (if):
+				return vacio, fin de la función
+			en caso de que no (else)
+				al margen izquierdo del circulo le asignaremos (como estilo) nuevaPosición
+					será: circulo.style.left = nuevaPosicion + 'px'
+
+	-moverDerecha
+		-paso 1
+			cuando el usuario indique al circulo que se mueva a la derecha:
+				ver si el circulo se va a salir de la pantalla. De ser así:
+					no permitir que el circulo siga moviéndose
+				en caso de que no
+					el círculo tendrá una nueva posición, un pequeño espacio más a la derecha
+		-paso 2
+			llegaremos a esta función con el case 39 de elegirMovimiento:
+				el usuario aprieta botonDerecha
+				el usuaria toca la flecha derecha (keyCode 39)
+			crearemos una variable (const int) nuevaPosicion
+				será el margen izquierdo + 10 
+			si el doble de posicionArribaInicial es menor a nuevaPosicion (if):
+				return vacio, fin de la función
+			en caso de que no (else)
+				al margen izquierdo del circulo le asignaremos (como estilo) nuevaPosición
+					será: circulo.style.left = nuevaPosicion + 'px'
+
+	Math.ceil(Math.random() * (max - min) + min)
+

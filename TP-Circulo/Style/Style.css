@@ -1,0 +1,93 @@
+* {
+	margin: 0;
+	/*background-color: black;*/
+}
+
+.content {
+  position: relative;
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.circle {
+	position: absolute;
+	height: 100px;
+	width: 100px;
+	border-radius: 50%;
+	background-color: #FF0000;
+	transition: all .2s;
+}
+
+.control {
+	position: absolute;
+	top: 5%;
+	right: 9.5%;
+}
+
+.upMoveButton{
+	display: flex;
+	justify-content: center;
+}
+
+.moveButton {
+	border-radius: 80%;
+	border: 3px solid black;
+	background-color: #585858;
+	color: white;
+	font-size: 30px;
+	height: 60px; 
+	width: 60px;
+	margin: 3px;
+}
+
+.upButton {
+	transform: rotate(90deg);
+}
+
+.downButton {
+	transform: rotate(270deg);
+}
+
+.colors {
+	position: absolute; 
+	bottom: 10%;
+	right: 10%;
+}
+
+.colorButton {
+	border-radius: 50%;
+	border: 3px solid black;
+	height: 60px;
+	width: 60px;
+}
+
+.blueButton {
+	background-color: #0000FF; 
+}
+
+.greenButton {
+	background-color: #00FF00;
+}
+
+.redButton {
+	background-color: #FF0000;
+}
+
+.random {
+	position: absolute;
+	left: 5%;
+	top: 10%;
+}
+
+.randomButton {
+	background: url(../Img/change.png);
+	background-repeat: no-repeat;
+	background-size: contain; 
+	border-radius: 50%;
+	border: 5px solid white;
+	height: 70px;
+	width: 70px;
+}
