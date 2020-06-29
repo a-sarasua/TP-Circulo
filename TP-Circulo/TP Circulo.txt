@@ -1,5 +1,6 @@
 Trabajo Práctico: Mover Círculo
 Alumno: Sarasúa, Agustín
+Entrega / código funcionando: 29/06
 
 Consigna
 
@@ -26,6 +27,7 @@ En el body HTML tendremos:
 			botón rojo
 		random (div)
 			botón random
+			botón reset
 		div clase círculo
 
 Objetivos para con el círculo (que serán 4 funciones):
@@ -55,6 +57,7 @@ En CSS tendremos que darle estilo a:
 		-botonRojo: background-color: #FF0000
 	-random: estará ubicado a la izquierda de la pantalla
 		-botonRandom: su forma será redondeada y tendrá de fondo su propia imagen
+		-botonReiniciar: idem anterior
 	-círculo:
 		tendrá position absolute
 		además de tener su forma circular (con border radious), su color de fondo predeterminado será rojo
@@ -70,18 +73,26 @@ eventListener que usaremos:
 		-botonVerde: circulo.style.backgroundColor = '#00FF00'
 		-botonRojo: circulo.style.backgroundColor = '#FF0000'
 	-para el movimiento:
-		-botonArriba: 
-			irá a la función botonMouseAbajo dando como parámetro 38 (el código de flecha arriba)
-		-botonAbajo: irá a botonMouseAbajo dando como parámetro 40
-		-botonIzquierda: irá a botonMouseAbajo dando como parámetro 37
-		-botonDerecha: irá a botonMouseAbajo dando como parámetro 39
-		-tecla apretada ('keydown'): irá a la función elegirMovimiento dando como parámetro el número de tecla.
+		-clickabajo (mousedown) botonArriba: 
+			irá a la función intervaloMouseAbajo dando como parámetro 38 (el código de flecha arriba)
+		-click abajo (mousedown) botonAbajo: irá a intervaloMouseAbajo dando como parámetro 40
+		-click abajo (mousedown) botonIzquierda: irá a intervaloMouseAbajo dando como parámetro 37
+		-click abajo (mousedown) botonDerecha: irá a intervaloMouseAbajo dando como parámetro 39
+		-click arriba (mouseup) en todo el documento: irá a interrupcionMouseArriba
+			si lo hago solo en los botones, al mover el mouse se buguea (se mueve infinitamente) 
+		-tecla apretada ('keydown'): irá a la función elegirMovimiento dando como parámetro el número de tecla
+		-click abajo (mousedown) botonRandom: tendrá su propia función, explicada más abajo.
+		-click arriba (mouseup) botonRandom: irá a interrupcionMouseArriba
+	-para el reset:
+		-click en botonReiniciar:
+			le asignará como nueva posición la inicial (mismo método que en las funciones de mover) tanto de arriba como a la izquierda según indiquen las variables globales creadas 
+
+Variables globales: antes que nada, se crearan 3 variables globales:
+	-posición arriba inicial: circulo.offsetTop (const int)
+	-posición izquierda inicial: circulo.offsetLeft (const int)
+	-clickAbajoID 'mousedownID' = -1 (let int)
 
 Funciones:
-	-Variables globales: antes que nada, se crearan 3 variables globales:
-		posición arriba inicial: circulo.offsetTop (const int)
-		posición izquierda inicial: circulo.offsetLeft (const int)
-		clickAbajoID = -1 (let int)
 
 	-esperar: 
 		está para determinar tiempos de espera porque, de no estar, las transisiones se buguean con más de un pedido de movimiento en un mismo segundo. Como se consiguió en internet, voy directo al paso 2:
@@ -94,17 +105,24 @@ Funciones:
 					final será igual a la fecha actual (idem como fue obtenida comienzo más arriba)
 
 	-elegir movimiento
-		-paso2:
+		-paso 1:
+			ver cuál tecla o flecha se apretó o clickeo
+				si es flecha izquierda, moverse a la izquierda
+				si es flecha arriba, moverse arriba
+				si es flecha derecha, moverse a la derecha
+				si es flecha abajo, moverse abajo
+
+		-paso 2:
 			Recibe un número (más bien key)
 			espera 20ms llamando a la función 'esperar' para que no se buguee la transición 
 			hace un switch según el número recibido:
-				flecha izquierda (case keyCode 37):
+				case keyCode 37:
 					irá a la función moverIzquierda
-				flecha arriba (case keyCode 38): 
+				case keyCode 38: 
 					irá a la función moverArriba
-				flecha derecha (case keyCode 39):
+				case keyCode 39:
 					irá a la función moverDerecha
-				flecha abajo (case keyCode 40): 
+				case keyCode 40: 
 					irá a la función moverAbajo
 				default: termina función (return)	
 
@@ -184,5 +202,51 @@ Funciones:
 				al margen izquierdo del circulo le asignaremos (como estilo) nuevaPosición
 					será: circulo.style.left = nuevaPosicion + 'px'
 
-	Math.ceil(Math.random() * (max - min) + min)
+	-intervaloMouseAbajo
+		-paso 1:
+			se fija cuál flecha se apretó
+			si el botón del mouse está apretado
+				va a moverse según la flecha que se apretó
+		-paso 2:
+			recibe un número (ya puesto en el eventListener) según la flecha que se apretó
+			ver si el botón del mouse está abajo
+				para esto usamos la variable global mouseAbajoID /'mousedownID' (la cual nos dirá el estado del mouse), que cuando vale -1 es que se apretó sin soltar el click
+					este -1 lo inventamos nosotros. Ahora, cuando el click se levanta (mouseUp), automaticamente pasa a valer un número de 1 en adelante según la cantidad de veces que se apriete (esto se ve analizando los detalles del evento click)
+			si está abajo, o sea mouseAbajoID es -1
+				va a fijar un intervalo (setInterval) de 50ms //o sea se ejecuta cada 50ms
+					para ello, como se investigó, mousedownID pasará a ser igual a 'setInterval(function(){},50)'
+				en esa función:
+					ejecuta elegirMovimiento entregando como parámetro el número recibido
+						esto se hará hasta que interrupciónMouseArriba lo detenga
+
+	-interrupcionMouseArriba
+		-paso 1:
+			se ejecuta cuando el usuario suelta el click, sin importar dónde esté el mouse
+				si el usuario soltó el click
+					deja de moverse interrumpiendo lo que estaba haciendo en intervaloMouseAbajo 
+		-paso 2:
+			si mousedownID es distinto de -1 (nuestro valor cuando se aprieta), o sea, que automáticamente la variable cambió al soltarse el click
+				se termina el intervalo (clearInterval) de mousedownID que se está ejecutando en la función anterior
+				mousedownID pasa a ser -1 (lo asignamos para reiniciar la variable y poder hacerlo otra vez) 
+
+	-click abajo botonRandom: 
+		como se dijo, tendrá su propia función
+		mientras esté apretado, se moverá de manera aleatoria
+		está basada en intervaloMouseAbajo, por lo que iremos directo al paso 2:
+
+		-paso 2:
+			si el click está abajo, o sea mouseAbajoID es -1
+				va a fijar un intervalo (setInterval) de 50ms
+					para ello, como se investigó, mousedownID pasará a ser igual a 'setInterval(function(){},50)'
+				en esa función:
+					crea una variable (cons int) que será igual a un número random:
+						para ello usaremos Math.random de la siguiente forma:
+							Math.ceil(Math.random() * (max - min) + min)
+								Math.ceil es para que de un número entero
+								los números serán entre 37 y 40, simulando a una persona usando el teclado
+					ejecuta elegirMovimiento entregando como parámetro numeroRandom
+
+
+
+
 

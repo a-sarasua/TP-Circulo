@@ -7,12 +7,11 @@ window.onload = function() {
 	const greenButton = document.querySelector('.greenButton')
 	const redButton = document.querySelector('.redButton')
 	const randomButton = document.querySelector('.randomButton')
+	const resetButton = document.querySelector('.resetButton')
 	const circle = document.querySelector('.circle')
 
 	const initialTop = circle.offsetTop
-	//console.log('inicial top: ' + initialTop)
 	const initialLeft = circle.offsetLeft
-	//console.log('inicial left: ' + initialLeft)
 	let mousedownID = -1
 
 	function wait(ms){
@@ -24,73 +23,54 @@ window.onload = function() {
 	}
 
 	function moveLeft() {
-		//console.log('moveLeft')
-		//console.log('old position: ' + circle.offsetLeft)
 		const newPosition = circle.offsetLeft - 25
 		if (newPosition < -2) {
 			return
 		} else {
 			circle.style.left = newPosition + 'px'
-			//console.log('newposition: ' + newPosition)
 		}
 	}
 
 	function moveUp() {
-		//console.log('moveUp')
-		//console.log('old position: ' + circle.offsetTop)
 		const newPosition = circle.offsetTop - 25 
 		if (newPosition < -2) {
 			return
 		} else {
 			circle.style.top = newPosition + 'px'
-			//console.log('newposition: ' + newPosition)
 		}
 	}
 
 	function moveDown() {
-		//console.log('moveDown')
-		//console.log('old position: ' + circle.offsetTop)
 		const newPosition = circle.offsetTop + 25
 		if (initialTop*2 < newPosition){
 			return
 		} else {
 			circle.style.top = newPosition + 'px'
-			//console.log('newposition: ' + newPosition)
 		}
 	}
 
 	function moveRight() {
-		//console.log('moveRight')
-		//console.log('old position: ' + circle.offsetLeft)
 		const newPosition = circle.offsetLeft + 25
 		if (initialLeft*2 < newPosition) {
 			return
 		} else {
-			circle.style.left = newPosition + 'px'
-			//console.log('newposition: ' + newPosition)		
+			circle.style.left = newPosition + 'px'		
 		}
 	}
 
 	function chooseMovement(key) {
+		wait(20)
 		switch (key) {
 			case 37:
-				//console.log('case left')
-				wait(20)
 				moveLeft()
 				break
 			case 38:
-				//console.log('case up')
-				wait(20)
 				moveUp()
 				break
 			case 39:
-				//console.log('case right')
-				wait(20)
 				moveRight()
 				break
 			case 40:
-				//console.log('case down')
-				wait(20)
 				moveDown()
 				break				
 			default:
@@ -121,21 +101,21 @@ window.onload = function() {
 	leftButton.addEventListener('mousedown', function(){mouseDownInterval(37)})
 	document.addEventListener('mouseup', mouseUpinterruption)
 	upButton.addEventListener('mousedown', function(){mouseDownInterval(38)})
-	//upButton.addEventListener('mouseup', mouseUpinterruption)
 	rightButton.addEventListener('mousedown', function(){mouseDownInterval(39)})
-	//rightButton.addEventListener('mouseup', mouseUpinterruption)
 	downButton.addEventListener('mousedown', function(){mouseDownInterval(40)})
-	//downButton.addEventListener('mouseup', mouseUpinterruption)
 	randomButton.addEventListener('mousedown', function(){
 		if(mousedownID === -1) {
 			mousedownID = setInterval(function(){
 				const randomDirection = Math.ceil(Math.random() * (40 - 36) + 36)
-				console.log(randomDirection)
 				chooseMovement(randomDirection)
 			}, 50)
 		}
 	})
 	randomButton.addEventListener('mouseup', mouseUpinterruption)
+	resetButton.addEventListener('click', function(){
+		circle.style.left = initialLeft + 'px'
+		circle.style.top = initialTop + 'px'
+	})
 
 }
 	
