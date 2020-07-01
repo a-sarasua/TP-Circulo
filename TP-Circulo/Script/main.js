@@ -1,13 +1,18 @@
 window.onload = function() {
+	const MOVEMENT = 25
+
 	const leftButton = document.querySelector('.leftButton')
 	const upButton = document.querySelector('.upButton')
 	const rightButton = document.querySelector('.rightButton')
 	const downButton = document.querySelector('.downButton')
+
 	const blueButton = document.querySelector('.blueButton')
 	const greenButton = document.querySelector('.greenButton')
 	const redButton = document.querySelector('.redButton')
+
 	const randomButton = document.querySelector('.randomButton')
 	const resetButton = document.querySelector('.resetButton')
+
 	const circle = document.querySelector('.circle')
 
 	const initialTop = circle.offsetTop
@@ -23,16 +28,16 @@ window.onload = function() {
 	}
 
 	function moveLeft() {
-		const newPosition = circle.offsetLeft - 25
+		const newPosition = circle.offsetLeft - MOVEMENT
 		if (newPosition < -2) {
 			return
 		} else {
-			circle.style.left = newPosition + 'px'
+			circle.style.left = newPosition + 'px' 
 		}
 	}
 
 	function moveUp() {
-		const newPosition = circle.offsetTop - 25 
+		const newPosition = circle.offsetTop - MOVEMENT 
 		if (newPosition < -2) {
 			return
 		} else {
@@ -41,7 +46,7 @@ window.onload = function() {
 	}
 
 	function moveDown() {
-		const newPosition = circle.offsetTop + 25
+		const newPosition = circle.offsetTop + MOVEMENT
 		if (initialTop*2 < newPosition){
 			return
 		} else {
@@ -98,11 +103,13 @@ window.onload = function() {
 	redButton.addEventListener('click', function(){circle.style.backgroundColor = '#FF0000'})
 
 	document.addEventListener('keydown', function(){chooseMovement(event.keyCode)})
+
 	leftButton.addEventListener('mousedown', function(){mouseDownInterval(37)})
-	document.addEventListener('mouseup', mouseUpinterruption)
 	upButton.addEventListener('mousedown', function(){mouseDownInterval(38)})
 	rightButton.addEventListener('mousedown', function(){mouseDownInterval(39)})
 	downButton.addEventListener('mousedown', function(){mouseDownInterval(40)})
+	document.addEventListener('mouseup', mouseUpinterruption)
+	
 	randomButton.addEventListener('mousedown', function(){
 		if(mousedownID === -1) {
 			mousedownID = setInterval(function(){

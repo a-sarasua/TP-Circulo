@@ -1,6 +1,6 @@
 * {
 	margin: 0;
-	background-color: #A9F5A9;
+	background-color: #81BEF7;
 }
 
 .content {
@@ -36,6 +36,7 @@
 .moveButton {
 	border-radius: 80%;
 	border: 3px solid black;
+	outline: none;
 	background-color: #585858;
 	color: white;
 	font-size: 30px;
@@ -61,6 +62,7 @@
 .colorButton {
 	border-radius: 50%;
 	border: 3px solid black;
+	outline: none;
 	height: 70px;
 	width: 70px;
 }
@@ -87,6 +89,7 @@
 	border-radius: 50%;
 	height: 100px;
 	width: 100px;
+	outline: none;
 }
 
 .randomButton {
