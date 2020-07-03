@@ -34,7 +34,7 @@
 }
 
 .moveButton {
-	border-radius: 80%;
+	border-radius: 20%;
 	border: 3px solid black;
 	outline: none;
 	background-color: #585858;
@@ -85,15 +85,23 @@
 	top: 10%;
 }
 
-.randomButton, .resetButton {
+.playButton, .pauseButton, .resetButton {
 	border-radius: 50%;
 	height: 100px;
 	width: 100px;
 	outline: none;
 }
 
-.randomButton {
-	background: url(../Img/change.png);
+.playButton {
+	background: url(../Img/play.png);
+	background-repeat: no-repeat;
+	background-size: contain;
+	background-color: white;
+	margin-right: 10px; 
+}
+
+.pauseButton {
+	background: url(../Img/pause.png);
 	background-repeat: no-repeat;
 	background-size: contain;
 	margin-right: 10px; 
