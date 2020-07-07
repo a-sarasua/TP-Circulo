@@ -1,6 +1,7 @@
 * {
 	margin: 0;
 	background-color: #81BEF7;
+	overflow: hidden;
 }
 
 .content {
@@ -20,6 +21,11 @@
 	border: 3px solid black;
 	background-color: #FF0000;
 	transition: all .2s;
+}
+
+.circleOutside{
+	opacity: 0;
+	transition: none;
 }
 
 .control {

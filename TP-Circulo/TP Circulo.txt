@@ -59,11 +59,14 @@ En CSS tendremos que darle estilo a:
 	-random: estará ubicado a la izquierda de la pantalla
 		-botonRandom: su forma será redondeada y tendrá de fondo su propia imagen
 		-botonReiniciar: idem anterior
-	-círculo:
+	-circulo:
 		tendrá position absolute
 		además de tener su forma circular (con border radious), su color de fondo predeterminado será rojo
 		tendrá una transición de 0.2 segundos
 			esto hará que tanto el movimiento como el cambio de color sea más agradable a la vista
+	-circuloAfuera: //estará cuando el círculo se esté moviendo de una punta a otra
+		opacity: 0 //o sea el usuario no lo verá
+		transition: none //sino al principio se vería el círculo moviéndose
 
 Variables globales: antes que nada, se crearan 7 variables globales (cuando se usan se explican para qué):
 	-MOVIMIENTO: varibale let int para definir cuántos pixeles se moverá el círculo
@@ -143,39 +146,44 @@ Funciones:
 		-paso 1
 			cuando el usuario indique al circulo que suba:
 				ver si el circulo se va a salir de la pantalla. De ser así:
-					no permitir que el circulo siga subiendo
+					hacer que el círculo aparezca abajo
 				en caso de que no
 					el círculo tendrá una nueva posición, un pequeño espacio más arriba
 		-paso 2
 			llegaremos a esta función con el case 38 de elegirMovimiento:
 				el usuario aprieta botonArriba
 				el usuaria toca la flecha arriba (keyCode 38)
-			crearemos una variable (const int) nuevaPosicion
+			crearemos una variable (let int) nuevaPosicion
 				será el margen de arriba - MOVIMIENTO (la cantidad de px que quiero que se mueva)
-			si nuevaPosicion es menor a 0 (if):
-				return vacio, fin de la función
-			en caso de que no (else)
-				al margen de arriba del circulo le asignaremos (como estilo) nuevaPosicion (en px)
+			si nuevaPosicion es menor a -100 (o sea sale todo el círculo) (if):
+				agrego clase circuloAfuera
+				nuevaPosicion va a ser posiciónArribaInicial * 2 + 100
+					o sea abajo de toda la pantalla + todo el círculo
+			al margen de arriba del circulo le asignaremos (como estilo) nuevaPosicion (en px)
 					será: circulo.style.top = nuevaPosicion + 'px'
+			cuando pasen 50ms (usamos setTimeout) //sino se hace todo demasiado rápido y la transición vuelve antes de que termine de moverse
+				sacamos la clase circuloAfuera
 
 	-moverAbajo
 		-paso 1
 			cuando el usuario indique al circulo que baje:
 				ver si el circulo se va a salir de la pantalla. De ser así:
-					no permitir que el circulo siga bajando
+					hacer que el círculo aparezca arriba
 				en caso de que no
 					el círculo tendrá una nueva posición, un pequeño espacio más arriba
 		-paso 2
 			llegaremos a esta función con el case 40 de elegirMovimiento:
 				el usuario aprieta botonAbajo
 				el usuaria toca la flecha abajo (keyCode 40)
-			crearemos una variable (const int) nuevaPosicion
+			crearemos una variable (let int) nuevaPosicion
 				será el margen de arriba + MOVIMIENTO (mientras mayor margen arriba, más abajo estará)
-			si el doble de posicionArribaInicial es menor a nuevaPosición (if):
-				return vacio, fin de la función porque el doble de la mitad es la página completa
-			en caso de que no (else)
-				al margen de arriba del circulo le asignaremos (como estilo) nuevaPosicion
-					será: circulo.style.top = nuevaPosicion + 'px'
+			si el doble de posicionArribaInicial + 100 es menor a nuevaPosición (o sea sale todo el círculo) (if):
+				agrego clase circuloAfuera
+				nuevaPosicion va a ser -100
+			al margen de arriba del circulo le asignaremos (como estilo) nuevaPosicion
+				será: circulo.style.top = nuevaPosicion + 'px'
+			cuando pasen 50ms (usamos setTimeout)
+				sacamos la clase circuloAfuera
 
 	-moverIzquierda
 		-paso 1
@@ -188,13 +196,15 @@ Funciones:
 			llegaremos a esta función con el case 37 de elegirMovimiento:
 				el usuario aprieta botonIzquierda
 				el usuaria toca la flecha izquierda (keyCode 37)
-			crearemos una variable (const int) nuevaPosicion
+			crearemos una variable (let int) nuevaPosicion
 				será el margen izquierdo - MOVIMIENTO 
-			si nuevaPosicion es menor a 0 (if):
-				return vacio, fin de la función
-			en caso de que no (else)
-				al margen izquierdo del circulo le asignaremos (como estilo) nuevaPosición
-					será: circulo.style.left = nuevaPosicion + 'px'
+			si nuevaPosicion es menor a -100 (if):
+				agrego clase circuloAfuera
+				nuevaPosicion va a ser posicionIzquierdaInicial * 2 + 100
+			al margen izquierdo del circulo le asignaremos (como estilo) nuevaPosición
+				será: circulo.style.left = nuevaPosicion + 'px'
+			cuando pasen 50ms (usamos setTimeout)
+				sacamos la clase circuloAfuera
 
 	-moverDerecha
 		-paso 1
@@ -207,13 +217,15 @@ Funciones:
 			llegaremos a esta función con el case 39 de elegirMovimiento:
 				el usuario aprieta botonDerecha
 				el usuaria toca la flecha derecha (keyCode 39)
-			crearemos una variable (const int) nuevaPosicion
+			crearemos una variable (let int) nuevaPosicion
 				será el margen izquierdo + MOVIMIENTO 
-			si el doble de posicionArribaInicial es menor a nuevaPosicion (if):
-				return vacio, fin de la función
-			en caso de que no (else)
-				al margen izquierdo del circulo le asignaremos (como estilo) nuevaPosición
-					será: circulo.style.left = nuevaPosicion + 'px'
+			si el doble de posicionArribaInicial + 100 es menor a nuevaPosicion (if):
+				agrego clase circuloAfuera
+				nuevaPosicion va a ser -100
+			al margen izquierdo del circulo le asignaremos (como estilo) nuevaPosición
+				será: circulo.style.left = nuevaPosicion + 'px'
+			cuando pasen 50ms (usamos setTimeout)
+				sacamos la clase circuloAfuera
 
 	-intervaloMouseAbajo
 		-paso 1:

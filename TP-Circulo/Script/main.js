@@ -31,27 +31,51 @@ window.onload = function() {
 	}
 
 	function moveLeft() {
-		const newPosition = circle.offsetLeft - MOVEMENT
-		if (newPosition < -2) return
-		circle.style.left = newPosition + 'px' 
+		let newPosition = circle.offsetLeft - MOVEMENT
+		if (newPosition < -(100 + MOVEMENT)){
+			circle.classList.add('circleOutside')
+			newPosition = initialLeft * 2 + 100
+		}
+		circle.style.left = newPosition + 'px'
+		setTimeout(function(){
+			circle.classList.remove('circleOutside')
+		}, 50)
 	}
 
 	function moveUp() {
-		const newPosition = circle.offsetTop - MOVEMENT 
-		if (newPosition < -2) return
+		let newPosition = circle.offsetTop - MOVEMENT 
+		if (newPosition < -(100 + MOVEMENT)){
+			circle.classList.add('circleOutside')
+			newPosition = initialTop * 2 + 100
+		}
 		circle.style.top = newPosition + 'px'
+		setTimeout(function(){
+			circle.classList.remove('circleOutside')
+		}, 50)
 	}
 
 	function moveDown() {
-		const newPosition = circle.offsetTop + MOVEMENT
-		if (initialTop*2 < newPosition) return
+		let newPosition = circle.offsetTop + MOVEMENT
+		if ((initialTop*2 + (100+MOVEMENT)) < newPosition){
+			circle.classList.add('circleOutside')
+			newPosition = -100
+		}
 		circle.style.top = newPosition + 'px'
+		setTimeout(function(){
+			circle.classList.remove('circleOutside')
+		}, 50)	
 	}
 
 	function moveRight() {
-		const newPosition = circle.offsetLeft + 25
-		if (initialLeft*2 < newPosition) return
-		circle.style.left = newPosition + 'px'		
+		let newPosition = circle.offsetLeft + 25
+		if ((initialLeft*2 + (100+MOVEMENT))< newPosition){
+			circle.classList.add('circleOutside')
+			newPosition = -100
+		}
+		circle.style.left = newPosition + 'px'
+		setTimeout(function(){
+			circle.classList.remove('circleOutside')
+		}, 50)			
 	}
 
 	function chooseMovement(key) {
@@ -87,7 +111,6 @@ window.onload = function() {
 	}
 
 	function movementInterrupt() {
-		console.log(randomOff)
 		if(mousedownID !== -1 && randomOff) {
 			clearInterval(mousedownID)
 			mousedownID = -1
